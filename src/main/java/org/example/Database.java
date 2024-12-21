@@ -1,6 +1,7 @@
 package org.example;
 
 import java.sql.*;
+import java.util.List;
 
 public class Database {
     private static final String URL = "jdbc:sqlite:games_database.db";
@@ -13,6 +14,10 @@ public class Database {
         } catch (SQLException e) {
             System.err.println("Ошибка при подключении к базе данных: " + e.getMessage());
         }
+    }
+
+    public Connection getConnection() {
+        return connection;
     }
 
     public void createTables() {
@@ -35,24 +40,25 @@ public class Database {
         }
     }
 
-    public void insertGame(int rank, String name, String platform, int year, String genre, String publisher,
-                           double naSales, double euSales, double jpSales, double otherSales, double globalSales) {
+    public void insertGame(List<Game> games) {
         String sql = "INSERT INTO games(rank, name, platform, year, genre, publisher, na_sales, eu_sales, jp_sales, other_sales, global_sales) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1, rank);
-            pstmt.setString(2, name);
-            pstmt.setString(3, platform);
-            pstmt.setInt(4, year);
-            pstmt.setString(5, genre);
-            pstmt.setString(6, publisher);
-            pstmt.setDouble(7, naSales);
-            pstmt.setDouble(8, euSales);
-            pstmt.setDouble(9, jpSales);
-            pstmt.setDouble(10, otherSales);
-            pstmt.setDouble(11, globalSales);
-
-            pstmt.executeUpdate();
+            for (Game game : games){
+                pstmt.setInt(1, game.getRank());
+                pstmt.setString(2, game.getName());
+                pstmt.setString(3, game.getPlatform());
+                pstmt.setInt(4, game.getYear());
+                pstmt.setString(5, game.getGenre());
+                pstmt.setString(6, game.getPublisher());
+                pstmt.setDouble(7, game.getNaSales());
+                pstmt.setDouble(8, game.getEuSales());
+                pstmt.setDouble(9, game.getJpSales());
+                pstmt.setDouble(10, game.getOtherSales());
+                pstmt.setDouble(11, game.getGlobalSales());
+                pstmt.addBatch();
+            }
+            pstmt.executeBatch();
         } catch (SQLException e) {
             System.err.println("Ошибка при вставке данных: " + e.getMessage());
         }
