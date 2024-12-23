@@ -36,22 +36,18 @@ public class Graph {
         CategoryPlot plot = barChart.getCategoryPlot();
         BarRenderer renderer = (BarRenderer) plot.getRenderer();
 
-        // Настройка цветов столбцов
-        renderer.setSeriesPaint(0, new Color(79, 129, 189)); // Голубой цвет столбцов
+        renderer.setSeriesPaint(0, new Color(79, 129, 189));
 
-        // Настройка фона графика
         plot.setBackgroundPaint(Color.WHITE);
         plot.setDomainGridlinePaint(Color.GRAY);
         plot.setRangeGridlinePaint(Color.GRAY);
 
-        // Настройка шрифтов
         Font titleFont = new Font("Arial", Font.BOLD, 18);
         Font labelFont = new Font("Arial", Font.PLAIN, 14);
         barChart.setTitle(new TextTitle(title, titleFont));
         plot.getDomainAxis().setLabelFont(labelFont);
         plot.getRangeAxis().setLabelFont(labelFont);
 
-        // Настройка отступов
         plot.getDomainAxis().setCategoryMargin(0.2);
 
         TextTitle subtitle = new TextTitle("Данные взяты из games_database",
